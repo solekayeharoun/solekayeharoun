@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Shop.css">
+    <title>Document</title>
+    <style>
+   *{
+    margin: 0;
+    padding: 0;
+}
+body{
+    
+    background: #ffffff;
+    color: rgb(0, 0, 0);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.crud{
+    display: grid;
+    grid-template-columns: 20% 80%;
+    grid-column-gap: 2px;
+}
+.head{
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 1%;
+    margin-bottom: 5%;
+    animation-name: mo;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    transition: 2s;
+}
+input{
+    width: 90%;
+    height: 10px;
+    outline: none;
+    margin: 10px 0px;
+    padding: 3%;
+    border-radius: 5%;
+    background: #ffffff;
+    color: rgb(0, 0, 0);
+    font-size: 100%;
+}
+
+button{
+    width: 100%;
+    height: 30px;
+    border: none;
+    text-transform: capitalize;
+    font-size: 100%;
+    cursor: pointer;
+    transition: 2s;
+    margin-bottom: 1%;
+    
+}
+table{
+    width: 100%;
+    text-align: center;
+    margin: 10px 0px;
+    text-transform: capitalize;
+}
+table th{
+   
+    text-transform: uppercase;
+   
+}
+table td{
+    
+}
+#submit{
+    width: 97%;
+}
+#delete{
+   width: 97%;
+}
+.a{
+    justify-content: center;
+    display: inline;
+}
+    </style>
+   
+</head>
+<body>
+       <div class="head">
+            <h1>management</h1>
+        </div>
+
+
+    <div class=" crud">
+        
+        <div class="c input">
+            <input type="text" id="titre" placeholder="Nom">
+            <input type="text" id="prix" placeholder="Prenom">
+            <input type="text" id="categorie" placeholder="Email">
+            <input type="number" id="categorie1" placeholder="Age">
+            <input type="text" id="categorie2" placeholder="Sexe">
+            <button id="submit">Connecter</button>
+            <div id="delete"></div>
+        </div>
+        <div class="c output">
+            <table>
+                <tr>
+                    <th>id</th>
+                    <th>Nom</th>
+                    <th>Prenom</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                    <th>Sexe</th>
+                    <th class="a">Parametre</th>
+                </tr>
+                <tbody id="tbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        let titre = document.getElementById ('titre') ;
+        let prix = document.getElementById ('prix') ;
+        let categorie = document.getElementById ('categorie') ;
+        let categorie1 = document.getElementById ('categorie1') ;
+        let categorie2 = document.getElementById ('categorie2') ;
+        let submit = document.getElementById ('submit') ;
+        let mood = 'create' ;
+        let tmp ;
+        
+        //            CREATE
+        
+        let data ;
+        
+        if (localStorage.db1 != null)
+        {
+            data = JSON.parse (localStorage.db2) ;
+        }else
+        {
+            data = [] ;
+        }
+        
+        submit.onclick = function () {
+            let classe = {
+                titre : titre.value ,
+                prix : prix.value ,
+                categorie : categorie.value ,
+                categorie1 : categorie1.value ,
+                categorie2 : categorie2.value ,
+            }
+            if ( mood == 'create' ) {
+                if (classe.count >= 1){
+                for (i=0 ; i<classe.count ; i++)
+                {
+                    data.push (classe) ;
+                } }else{
+                    data.push (classe) ;
+                }
+            }else{
+                data [tmp] = classe ;
+                mood = 'create' ;
+                submit.innerHTML = 'create' ;
+            }
+            
+           
+            
+            //            LOCSTORA 
+        
+            localStorage.setItem ('db0' , JSON.stringify (data)) ;
+            clear () ;
+            read () ;
+        }
+        
+        //            CLEAR
+        
+        function clear () {
+                titre.value = '' ;
+                prix.value = '' ;
+                categorie.value = '' ;
+                categorie1.value = '' ;
+                categorie2.value = '' ;
+        }
+        //            READ
+        function read () {
+            let table = '' ;
+            for (i=0 ; i<data.length ; ++i)
+            {
+                table += `<tr>
+                                <td>${[i+1]}</td>
+                                <td>${data[i].titre}</td>
+                                <td>${data[i].prix}</td>
+                                <td>${data[i].categorie}</td>
+                                <td>${data[i].categorie1}</td>
+                                <td>${data[i].categorie2}</td>
+                                <td><button class="a" onclick = "update (${[i]})" id='update'>mise a jour</button><button class="a" onclick = "delet (${[i]})" id='supprimer'>supprimer</button></td>
+                          </tr>`
+                          
+            }
+            document.getElementById ('tbody').innerHTML = table ;
+            deleteAll = document.getElementById ('delete');
+            if (data.length > 0) {
+            }else {
+            }
+        }
+        read () ;
+        
+        //            DELETE
+        
+        function delet (i) {
+            data.splice (i , 1) ;
+            localStorage.db2 = JSON.stringify (data) ;
+            read () ;
+        }
+        
+        function deleteAll1 () {
+            localStorage.clear () ;
+            data.splice (0) ;
+            read () ;
+        }
+        //            UPDATE
+        function update (i){
+            titre.value = data[i].titre ;
+            prix.value = data[i].prix ;
+            count.value = data[i].count ;
+            categorie.value = data[i].categorie ;
+            submit.innerHTML = 'update' ;
+            mood = 'update' ; 
+            tmp = i ;
+            scroll ({
+                top: 0 ,
+                behavior : ('smooth') ,
+            })
+        }
+        
+        
+        </script>
+</body>
+</html>
